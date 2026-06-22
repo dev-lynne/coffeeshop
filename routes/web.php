@@ -1,19 +1,45 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
+use App\Http\Controllers\IndexController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+// Public Routes
+Route::get('/', IndexController::class)->name('index');
+
+// Shop Routes
+Route::prefix('shop')->name('shop.')->group(function () {
+    Route::get('/', function () {
+        return Inertia::render('Shop/Index');
+    })->name('index');
+    
+    Route::get('/product/{id}', function () {
+        return Inertia::render('Shop/Product');
+    })->name('product');
 });
 
+// Cart Routes
+Route::prefix('cart')->name('cart.')->group(function () {
+    Route::get('/', function () {
+        return Inertia::render('Cart/Index');
+    })->name('index');
+    
+    Route::get('/checkout', function () {
+        return Inertia::render('Cart/Checkout');
+    })->name('checkout');
+});
+
+// About & Contact
+Route::get('/about', function () {
+    return Inertia::render('About');
+})->name('about');
+
+Route::get('/contact', function () {
+    return Inertia::render('Contact');
+})->name('contact');
+
+// Authenticated Routes
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
