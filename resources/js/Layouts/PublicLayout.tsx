@@ -1,7 +1,20 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { PropsWithChildren } from 'react';
 
+interface User{
+    id:number;
+    name: string;
+    email: string;
+}
+
+interface PageProps{
+    auth: {
+        user: User | null;
+    }
+}
 export default function PublicLayout({ children }: PropsWithChildren) {
+    const {auth} = usePage().props as PageProps;
+   const user = auth?.user;
     return (
         <div className="min-h-screen bg-white">
             {/* Navigation */}
@@ -14,8 +27,40 @@ export default function PublicLayout({ children }: PropsWithChildren) {
                         <Link href="/shop" className="hover:text-amber-400 transition">Shop</Link>
                         <Link href="/about" className="hover:text-amber-400 transition">About</Link>
                         <Link href="/contact" className="hover:text-amber-400 transition">Contact</Link>
-                        <Link href="/login" className="bg-amber-600 px-4 py-2 rounded hover:bg-amber-700 transition">Login</Link>
-                        <Link href="/register" className="bg-amber-600 px-4 py-2 rounded hover:bg-amber-700 transition">Register</Link>
+                       {user ? (
+                        <div className='flex items-center gap-4'>
+                            <Link href="/cart" className='hover:text-amber-400 transition'>
+                            🛒 Cart
+                            </Link>
+                            <div className='flex items-center gap-3 pl-4 border-l border-stone-700'>
+                                <div>
+                                    <p className='font-semibold'>{user.name}</p>
+                                    <p className='text-sm text-gray-400'>{user.email}</p>
+
+                                </div>
+                                <Link href="/profile" className='bg-amber-600 px-4 py-2 rounded hover:bg-amber-700 transition'>
+                                 Profile
+                                </Link>
+                                <Link href="/logout" method='post' as="button" className='bg-red-600 px-4 py-2 rounded hover:bg-red-700 transition'>
+                                Logout
+                                </Link>
+
+                            </div>
+                        
+                        </div>
+                       )
+                    : (
+                        <>
+                        <Link href="/login" className="bg-amber-600 px-4 py-2 rounded hover:bg-amber-700 transition">
+                            Login
+                        </Link>
+                        <Link href="/register" className="bg-amber-600 px-4 py-2 rounded hover:bg-amber-700 transition">
+                            Register
+                        </Link>
+                        </>
+                    )
+
+                       }
                     </div>
                 </div>
             </nav>
