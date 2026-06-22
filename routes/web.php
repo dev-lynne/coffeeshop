@@ -39,9 +39,9 @@ Route::get('/contact', function () {
     return Inertia::render('Contact');
 })->name('contact');
 
-// Authenticated Routes
+// Authenticated Routes - Dashboard redirects to home
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+    return redirect('/');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {

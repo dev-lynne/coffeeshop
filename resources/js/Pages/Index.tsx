@@ -1,11 +1,34 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import PublicLayout from '@/Layouts/PublicLayout';
 
+interface User {
+    id: number;
+    name: string;
+    email: string;
+}
+
 export default function Index() {
+    const page = usePage();
+    const user = page.props.auth?.user as User | null;
     return (
         <PublicLayout>
             <Head title="Kairos Coffee Shop - Premium Coffee" />
 
+         {user && (
+                <div className="bg-gradient-to-r from-amber-600 to-orange-600 text-white py-8">
+                    <div className="max-w-7xl mx-auto px-4">
+                        <div className="flex justify-between items-center">
+                            <div>
+                                <h2 className="text-3xl font-bold mb-2">Welcome back, {user.name}! ☕</h2>
+                                <p className="text-amber-100">Ready to enjoy your favorite coffee?</p>
+                            </div>
+                            <Link href="/shop" className="bg-white text-amber-700 px-8 py-3 rounded-lg font-bold hover:bg-amber-50 transition">
+                                Continue Shopping
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            )}
             {/* Hero Section */}
             <div className="relative min-h-screen bg-stone-950 overflow-hidden">
                 <div className="absolute inset-0">
