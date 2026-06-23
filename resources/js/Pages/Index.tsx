@@ -12,7 +12,7 @@ export default function Index() {
     const user = page.props.auth?.user as User | null;
     return (
         <PublicLayout>
-            <Head title="Kairos Coffee Shop - Premium Coffee" />
+            <Head title="Kairos Coffee Shop" />
 
          {user && (
                 <div className="bg-gradient-to-r from-amber-600 to-orange-600 text-white py-8">

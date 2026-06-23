@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\IndexController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -10,13 +11,8 @@ Route::get('/', IndexController::class)->name('index');
 
 // Shop Routes
 Route::prefix('shop')->name('shop.')->group(function () {
-    Route::get('/', function () {
-        return Inertia::render('Shop/Index');
-    })->name('index');
-    
-    Route::get('/product/{id}', function () {
-        return Inertia::render('Shop/Product');
-    })->name('product');
+    Route::get('/', [ProductController::class, 'index'])->name('index');
+    Route::get('/product/{id}', [ProductController::class, 'show'])->name('show');
 });
 
 // Cart Routes
