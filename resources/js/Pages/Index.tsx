@@ -7,9 +7,19 @@ interface User {
     email: string;
 }
 
+interface FeaturedProduct {
+    id: number;
+    name: string;
+    description: string;
+    price: number;
+    category: string;
+    image_path: string | null;
+}
+
 export default function Index() {
     const page = usePage();
     const user = page.props.auth?.user as User | null;
+    const featuredProducts = page.props.featuredProducts as FeaturedProduct[] || [];
     return (
         <PublicLayout>
             <Head title="Kairos Coffee Shop" />
@@ -132,7 +142,7 @@ export default function Index() {
                 </div>
             </section>
 
-            {/* Products Section */}
+            {/* Featured Collection */}
             <section className="py-24 bg-stone-50">
                 <div className="max-w-7xl mx-auto px-4">
                     <div className="text-center mb-20">
@@ -140,56 +150,46 @@ export default function Index() {
                             Featured <span className="font-bold">Collections</span>
                         </h2>
                         <p className="text-xl text-gray-600 max-w-2xl mx-auto font-light">
-                            Discover our signature selections
+                            Discover our signature selections chosen by our team.
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {[
-                            {
-                                name: 'Ethiopian Highlands',
-                                category: 'Single Origin',
-                                description: 'Bright, fruity notes with hints of floral and berry',
-                                price: '$16.99',
-                                color: 'from-amber-400 to-orange-500'
-                            },
-                            {
-                                name: 'Signature Blend',
-                                category: 'House Favorite',
-                                description: 'Perfectly balanced medium roast with chocolate notes',
-                                price: '$14.99',
-                                color: 'from-orange-500 to-red-600'
-                            },
-                            {
-                                name: 'Midnight Roast',
-                                category: 'Dark Roast',
-                                description: 'Bold and rich with deep caramel and cocoa',
-                                price: '$17.99',
-                                color: 'from-red-700 to-stone-800'
-                            }
-                        ].map((product, idx) => (
-                            <div key={idx} className="group">
-                                <div className={`h-64 bg-gradient-to-br ${product.color} rounded-lg mb-6 overflow-hidden relative`}>
-                                    <div className="absolute inset-0 opacity-0 group-hover:opacity-10 bg-white transition-opacity duration-300"></div>
+                    {featuredProducts.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            {featuredProducts.map((product) => (
+                                <div key={product.id} className="group bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow">
+                                    <div className="h-64 overflow-hidden bg-gray-200">
+                                        <img
+                                            src={product.image_path ? `/storage/${product.image_path}` : '/images/placeholder.png'}
+                                            alt={product.name}
+                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                                        />
+                                    </div>
+                                    <div className="p-6">
+                                        <p className="text-sm text-amber-600 font-semibold tracking-widest mb-2 uppercase">
+                                            {product.category}
+                                        </p>
+                                        <h3 className="text-2xl font-bold text-stone-950 mb-3">
+                                            {product.name}
+                                        </h3>
+                                        <p className="text-gray-600 mb-6 font-light line-clamp-2">
+                                            {product.description}
+                                        </p>
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-2xl font-bold text-amber-700">${product.price.toFixed(2)}</span>
+                                            <Link href={`/shop/product/${product.id}`} className="px-6 py-3 bg-stone-950 text-white font-semibold hover:bg-amber-600 transition-colors">
+                                                View Details
+                                            </Link>
+                                        </div>
+                                    </div>
                                 </div>
-                                <p className="text-sm text-amber-600 font-semibold tracking-widest mb-2">
-                                    {product.category}
-                                </p>
-                                <h3 className="text-2xl font-bold text-stone-950 mb-3">
-                                    {product.name}
-                                </h3>
-                                <p className="text-gray-600 mb-6 font-light">
-                                    {product.description}
-                                </p>
-                                <div className="flex justify-between items-center">
-                                    <span className="text-2xl font-bold text-amber-700">{product.price}</span>
-                                    <button className="px-6 py-3 bg-stone-950 text-white font-semibold hover:bg-amber-600 transition-colors">
-                                        Add to Cart
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="text-center py-16">
+                            <p className="text-xl text-gray-600">No featured products are available right now.</p>
+                        </div>
+                    )}
                 </div>
             </section>
 
