@@ -10,11 +10,12 @@ interface User{
 interface PageProps{
     auth: {
         user: User | null;
-    }
+    };
+    cartCount?: number;
 }
 export default function PublicLayout({ children }: PropsWithChildren) {
-    const {auth} = usePage().props as PageProps;
-   const user = auth?.user;
+    const { auth, cartCount = 0 } = usePage().props as PageProps;
+    const user = auth?.user;
     return (
         <div className="min-h-screen bg-white">
             {/* Navigation */}
@@ -29,8 +30,13 @@ export default function PublicLayout({ children }: PropsWithChildren) {
                         <Link href="/contact" className="hover:text-amber-400 transition">Contact</Link>
                        {user ? (
                         <div className='flex items-center gap-4'>
-                            <Link href="/cart" className='hover:text-amber-400 transition'>
-                            🛒 Cart
+                            <Link href="/cart" className='relative hover:text-amber-400 transition'>
+                                🛒 Cart
+                                {cartCount > 0 && (
+                                    <span className='absolute -top-2 -right-4 inline-flex h-6 min-w-[1.5rem] items-center justify-center rounded-full bg-amber-500 text-xs font-bold text-white'>
+                                        {cartCount}
+                                    </span>
+                                )}
                             </Link>
                             <div className='flex items-center gap-3 pl-4 border-l border-stone-700'>
                                 <div>

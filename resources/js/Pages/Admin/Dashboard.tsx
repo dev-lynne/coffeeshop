@@ -8,8 +8,7 @@ export default function Dashboard() {
 
     return (
         <AdminLayout title="Dashboard">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                {/* Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
                 <div className="bg-white rounded-lg shadow p-6">
                     <div className="text-sm text-gray-500 mb-2">Total Products</div>
                     <div className="text-3xl font-bold text-gray-800">{props.totalProducts || 0}</div>
@@ -21,6 +20,14 @@ export default function Dashboard() {
                 <div className="bg-white rounded-lg shadow p-6">
                     <div className="text-sm text-gray-500 mb-2">Low Stock Items</div>
                     <div className="text-3xl font-bold text-red-600">{props.lowStockProducts || 0}</div>
+                </div>
+                <div className="bg-white rounded-lg shadow p-6">
+                    <div className="text-sm text-gray-500 mb-2">Pending Orders</div>
+                    <div className="text-3xl font-bold text-amber-700">{props.pendingOrders || 0}</div>
+                </div>
+                <div className="bg-white rounded-lg shadow p-6">
+                    <div className="text-sm text-gray-500 mb-2">Sales Today</div>
+                    <div className="text-3xl font-bold text-green-700">${(Number(props.salesToday) || 0).toFixed(2)}</div>
                 </div>
             </div>
 
