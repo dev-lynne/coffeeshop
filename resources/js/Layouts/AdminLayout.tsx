@@ -57,6 +57,12 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
                             🏠 Dashboard
                         </Link>
                         <Link
+                            href="/admin/orders"
+                            className="block px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white"
+                        >
+                            🧾 Orders
+                        </Link>
+                        <Link
                             href="/admin/products"
                             className="block px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white"
                         >

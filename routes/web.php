@@ -1,7 +1,11 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\IndexController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -16,15 +20,20 @@ Route::prefix('shop')->name('shop.')->group(function () {
     Route::get('/product/{id}', [ProductController::class, 'show'])->name('show');
 });
 
-// Cart Routes
-Route::prefix('cart')->name('cart.')->group(function () {
-    Route::get('/', function () {
-        return Inertia::render('Cart/Index');
-    })->name('index');
+Route::middleware('auth')->group(function () {
+    // Cart Routes
+    Route::prefix('cart')->name('cart.')->group(function () {
+        Route::get('/', [CartController::class, 'index'])->name('index');
+        Route::post('/add', [CartController::class, 'add'])->name('add');
+        Route::post('/update', [CartController::class, 'update'])->name('update');
+        Route::delete('/remove/{productId}', [CartController::class, 'remove'])->name('remove');
+        Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout');
+    });
 
-    Route::get('/checkout', function () {
-        return Inertia::render('Cart/Checkout');
-    })->name('checkout');
+    // Order Routes
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
 });
 
 // About & Contact
@@ -49,11 +58,10 @@ Route::middleware('auth')->group(function () {
 
 // Admin Routes
 Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Admin/Dashboard');
-    })->name('home');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('home');
 
     Route::resource('products', AdminProductController::class);
+    Route::resource('orders', AdminOrderController::class)->only(['index', 'show', 'update']);
 });
 
 require __DIR__.'/auth.php';

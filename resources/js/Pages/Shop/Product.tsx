@@ -1,4 +1,5 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
+import { useState } from 'react';
 import PublicLayout from '@/Layouts/PublicLayout';
 
 interface Product {
@@ -16,6 +17,8 @@ interface ProductPageProps {
 }
 
 export default function ProductPage({ product }: ProductPageProps) {
+    const [quantity, setQuantity] = useState(1);
+
     const getImageUrl = (imagePath: string) => {
         if (imagePath) {
             return `/storage/${imagePath}`;
@@ -62,8 +65,25 @@ export default function ProductPage({ product }: ProductPageProps) {
                                 </p>
                             </div>
 
-                            <div className="flex gap-4">
-                                <button className="px-8 py-4 bg-stone-950 text-white font-bold hover:bg-amber-600 transition">
+                            <div className="flex items-center gap-4 mb-4">
+                                <label className="text-sm font-medium text-gray-700">Qty</label>
+                                <input
+                                    type="number"
+                                    value={quantity}
+                                    min={1}
+                                    onChange={(event) => setQuantity(Number(event.target.value) || 1)}
+                                    className="w-20 rounded-lg border border-gray-300 px-3 py-2 text-gray-800"
+                                />
+                            </div>
+                            <div className="flex gap-4 flex-wrap">
+                                <button
+                                    type="button"
+                                    onClick={() => router.post('/cart/add', {
+                                        product_id: product.id,
+                                        quantity,
+                                    })}
+                                    className="px-8 py-4 bg-stone-950 text-white font-bold hover:bg-amber-600 transition"
+                                >
                                     Add to Cart
                                 </button>
                                 <Link href="/shop" className="px-8 py-4 border-2 border-stone-950 text-stone-950 font-bold hover:bg-stone-950 hover:text-white transition">
